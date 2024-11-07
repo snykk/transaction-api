@@ -7,7 +7,7 @@ import (
 )
 
 type Wallet struct {
-	Id        int        `db:"wallet_id"`
+	Id        string     `db:"wallet_id"`
 	UserId    string     `db:"user_id"`
 	Balance   float64    `db:"balance"`
 	User      Users      `db:"user"`

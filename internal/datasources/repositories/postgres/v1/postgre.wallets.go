@@ -21,8 +21,8 @@ func NewWalletRepository(conn *sqlx.DB) V1Domains.WalletRepository {
 
 func (r *postgreWalletRepository) CreateWalletByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, error) {
 	query := `
-        INSERT INTO wallets (user_id, balance, created_at)
-        VALUES ($1, 0, $2)
+        INSERT INTO wallets (wallet_id, user_id, balance, created_at)
+        VALUES (uuid_generate_v4(), $1, 0, $2)
         RETURNING wallet_id, user_id, balance, created_at, updated_at
     `
 	var result records.Wallet

@@ -6,7 +6,7 @@ import (
 )
 
 type WalletDomain struct {
-	Id        int
+	Id        string
 	UserId    string
 	Balance   float64
 	User      UserDomain
