@@ -42,7 +42,7 @@ func (c *ProductHandler) Store(ctx *gin.Context) {
 	go c.ristrettoCache.Del("products")
 
 	NewSuccessResponse(ctx, statusCode, "product inserted successfully", map[string]interface{}{
-		"product": responses.FromDomain(b),
+		"product": responses.FromProductDomainV1(b),
 	})
 }
 
@@ -92,7 +92,7 @@ func (c *ProductHandler) GetById(ctx *gin.Context) {
 		return
 	}
 
-	productResponse := responses.FromDomain(productDomain)
+	productResponse := responses.FromProductDomainV1(productDomain)
 
 	go c.ristrettoCache.Set(fmt.Sprintf("product/%d", id), productResponse)
 
@@ -121,7 +121,7 @@ func (c *ProductHandler) Update(ctx *gin.Context) {
 	go c.ristrettoCache.Del("products", fmt.Sprintf("product/%d", id))
 
 	NewSuccessResponse(ctx, statusCode, fmt.Sprintf("product data with id %d updated successfully", id), map[string]interface{}{
-		"product": responses.FromDomain(newProduct),
+		"product": responses.FromProductDomainV1(newProduct),
 	})
 }
 

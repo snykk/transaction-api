@@ -16,7 +16,7 @@ type ProductResponse struct {
 	UpdatedAt   *time.Time `json:"updated_at"`
 }
 
-func FromDomain(b V1Domains.ProductDomain) ProductResponse {
+func FromProductDomainV1(b V1Domains.ProductDomain) ProductResponse {
 	return ProductResponse{
 		Id:          b.Id,
 		Name:        b.Name,
@@ -32,7 +32,7 @@ func ToProductResponseList(domains []V1Domains.ProductDomain) []ProductResponse 
 	var result []ProductResponse
 
 	for _, val := range domains {
-		result = append(result, FromDomain(val))
+		result = append(result, FromProductDomainV1(val))
 	}
 
 	return result

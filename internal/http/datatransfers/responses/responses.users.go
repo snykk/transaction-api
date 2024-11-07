@@ -29,7 +29,7 @@ func (u *UserResponse) ToV1Domain() V1Domains.UserDomain {
 	}
 }
 
-func FromV1Domain(u V1Domains.UserDomain) UserResponse {
+func FromUserDomainV1(u V1Domains.UserDomain) UserResponse {
 	return UserResponse{
 		Id:        u.ID,
 		Username:  u.Username,
@@ -46,7 +46,7 @@ func ToUserResponseList(domains []V1Domains.UserDomain) []UserResponse {
 	var result []UserResponse
 
 	for _, val := range domains {
-		result = append(result, FromV1Domain(val))
+		result = append(result, FromUserDomainV1(val))
 	}
 
 	return result

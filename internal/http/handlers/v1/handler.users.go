@@ -49,7 +49,7 @@ func (userH UserHandler) Regis(ctx *gin.Context) {
 	}
 
 	NewSuccessResponse(ctx, statusCode, "registration user success", map[string]interface{}{
-		"user": responses.FromV1Domain(userDomainn),
+		"user": responses.FromUserDomainV1(userDomainn),
 	})
 }
 
@@ -71,7 +71,7 @@ func (userH UserHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	NewSuccessResponse(ctx, statusCode, "login success", responses.FromV1Domain(userDomain))
+	NewSuccessResponse(ctx, statusCode, "login success", responses.FromUserDomainV1(userDomain))
 }
 
 func (userH UserHandler) SendOTP(ctx *gin.Context) {
@@ -154,7 +154,7 @@ func (c UserHandler) GetUserData(ctx *gin.Context) {
 		return
 	}
 
-	userResponse := responses.FromV1Domain(userDom)
+	userResponse := responses.FromUserDomainV1(userDom)
 
 	go c.ristrettoCache.Set(fmt.Sprintf("user/%s", userClaims.Email), userResponse)
 

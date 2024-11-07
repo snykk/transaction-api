@@ -8,9 +8,9 @@ import (
 
 type Wallet struct {
 	Id        int        `db:"wallet_id"`
-	UserId    int        `db:"user_id"`
+	UserId    string     `db:"user_id"`
 	Balance   float64    `db:"balance"`
-	User      Users      `db:"-"`
+	User      Users      `db:"user"`
 	CreatedAt time.Time  `db:"created_at"`
 	UpdatedAt *time.Time `db:"updated_at"`
 }
