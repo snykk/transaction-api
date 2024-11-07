@@ -35,7 +35,7 @@ func (r *walletRoutes) Routes() {
 		walletRoute.Use(r.authMiddleware)
 		{
 			walletRoute.POST("/init", r.v1Handler.Init)
-			// walletRoute.GET("/info", r.v1Handler.Info)
+			walletRoute.GET("/info", r.v1Handler.Info)
 			// walletRoute.POST("/deposit", r.v1Handler.Deposit)
 			// walletRoute.POST("/withdraw", r.v1Handler.WithDraw)
 		}

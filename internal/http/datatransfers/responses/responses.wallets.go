@@ -8,7 +8,7 @@ import (
 
 type WalletResponse struct {
 	Id        string     `json:"wallet_id"`
-	UserId    string     `json:"user_id"`
+	UserId    string     `json:"user_id,omitempty"`
 	Balance   float64    `json:"balance"`
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt *time.Time `json:"updated_at"`

@@ -20,7 +20,7 @@ func NewWalletUsecase(repo V1Domains.WalletRepository) V1Domains.WalletUsecase {
 }
 
 func (walletUC *walletUsecase) Init(ctx context.Context, userId string) (domain V1Domains.WalletDomain, statusCode int, err error) {
-	existingWallet, err := walletUC.repo.GetWalletByUserId(ctx, userId)
+	existingWallet, err := walletUC.repo.GetByUserId(ctx, userId)
 	if err == nil {
 		return existingWallet, http.StatusConflict, errors.New("wallet already exists for this user")
 	}
@@ -29,15 +29,25 @@ func (walletUC *walletUsecase) Init(ctx context.Context, userId string) (domain 
 		return V1Domains.WalletDomain{}, http.StatusInternalServerError, err
 	}
 
-	walletWithoutRelation, err := walletUC.repo.CreateWalletByUserId(ctx, userId)
+	walletWithoutRelationDom, err := walletUC.repo.CreateByUserId(ctx, userId)
 	if err != nil {
-		return walletWithoutRelation, http.StatusInternalServerError, err
+		return walletWithoutRelationDom, http.StatusInternalServerError, err
 	}
 
-	walletWithRelation, err := walletUC.repo.GetWalletByUserId(ctx, userId)
+	walletWithRelationDom, err := walletUC.repo.GetByUserId(ctx, userId)
 	if err != nil {
-		return walletWithRelation, http.StatusInternalServerError, err
+		return walletWithRelationDom, http.StatusInternalServerError, err
 	}
 
-	return walletWithRelation, http.StatusCreated, nil
+	return walletWithRelationDom, http.StatusCreated, nil
+}
+
+func (uc *walletUsecase) GetByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, int, error) {
+	walletDom, err := uc.repo.GetByUserId(ctx, userId)
+
+	if err != nil {
+		return V1Domains.WalletDomain{}, http.StatusNotFound, errors.New("wallet not found")
+	}
+
+	return walletDom, http.StatusOK, nil
 }

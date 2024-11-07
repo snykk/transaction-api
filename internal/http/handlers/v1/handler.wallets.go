@@ -38,3 +38,22 @@ func (c *WalletHandler) Init(ctx *gin.Context) {
 		"wallet": responses.FromWalletDomainV1(walletDom),
 	})
 }
+
+func (c *WalletHandler) Info(ctx *gin.Context) {
+	// get authenticated user from context
+	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
+
+	ctxx := ctx.Request.Context()
+	walletDom, statusCode, err := c.walletUsecase.GetByUserId(ctxx, userClaims.UserID)
+	if err != nil {
+		NewErrorResponse(ctx, statusCode, err.Error())
+		return
+	}
+
+	// remove user relation
+	walletDom.User = V1Domains.UserDomain{}
+
+	NewSuccessResponse(ctx, statusCode, "wallet fetched successfully", map[string]interface{}{
+		"wallet": responses.FromWalletDomainV1(walletDom),
+	})
+}

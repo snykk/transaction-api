@@ -16,9 +16,10 @@ type WalletDomain struct {
 
 type WalletUsecase interface {
 	Init(ctx context.Context, userId string) (domain WalletDomain, statusCode int, err error)
+	GetByUserId(ctx context.Context, userId string) (domain WalletDomain, statusCode int, err error)
 }
 
 type WalletRepository interface {
-	CreateWalletByUserId(ctx context.Context, userId string) (WalletDomain, error)
-	GetWalletByUserId(ctx context.Context, userId string) (WalletDomain, error)
+	CreateByUserId(ctx context.Context, userId string) (WalletDomain, error)
+	GetByUserId(ctx context.Context, userId string) (WalletDomain, error)
 }
