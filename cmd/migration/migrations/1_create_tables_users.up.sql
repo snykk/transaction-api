@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users(
-    id uuid PRIMARY KEY,
+    user_id uuid PRIMARY KEY,
     username VARCHAR(25) NOT NULL UNIQUE,
     email VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS users(
     deleted_at timestamptz 
 );
 
-CREATE INDEX idx_role_id ON users (role_id);
+CREATE INDEX idx_user_id ON users(user_id);

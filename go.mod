@@ -1,6 +1,6 @@
 module github.com/snykk/transaction-api
 
-go 1.19
+go 1.23.3
 
 require (
 	github.com/dgraph-io/ristretto v0.1.1

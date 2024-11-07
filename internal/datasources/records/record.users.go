@@ -5,7 +5,7 @@ import (
 )
 
 type Users struct {
-	Id        string     `db:"id"`
+	Id        string     `db:"user_id"`
 	Username  string     `db:"username"`
 	Email     string     `db:"email"`
 	Password  string     `db:"password"`
@@ -15,4 +15,3 @@ type Users struct {
 	UpdatedAt *time.Time `db:"updated_at"`
 	DeletedAt *time.Time `db:"deleted_at"`
 }
-

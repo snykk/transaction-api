@@ -31,6 +31,10 @@ func main() {
 	if err != nil {
 		logger.Panic(err.Error(), logrus.Fields{constants.LoggerCategory: constants.LoggerCategorySeeder})
 	}
+	err = seeder.ProductSeeder(seeders.ProductData)
+	if err != nil {
+		logger.Panic(err.Error(), logrus.Fields{constants.LoggerCategory: constants.LoggerCategorySeeder})
+	}
 
 	logger.Info("seeding success!", logrus.Fields{constants.LoggerCategory: constants.LoggerCategorySeeder})
 }

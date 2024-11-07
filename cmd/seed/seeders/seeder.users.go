@@ -27,10 +27,10 @@ func init() {
 			RoleId:   1,
 		},
 		{
-			Username: "john doe",
-			Email:    "johndoe@gmail.com",
+			Username: "Najib Fikri",
+			Email:    "najibfikri26@gmail.com",
 			Password: pass,
-			Active:   false,
+			Active:   true,
 			RoleId:   2,
 		},
 	}
