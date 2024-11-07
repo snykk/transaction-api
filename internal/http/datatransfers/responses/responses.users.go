@@ -42,7 +42,7 @@ func FromV1Domain(u V1Domains.UserDomain) UserResponse {
 	}
 }
 
-func ToResponseList(domains []V1Domains.UserDomain) []UserResponse {
+func ToUserResponseList(domains []V1Domains.UserDomain) []UserResponse {
 	var result []UserResponse
 
 	for _, val := range domains {

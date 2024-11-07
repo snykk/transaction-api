@@ -13,7 +13,7 @@ var UserData []records.Users
 
 func init() {
 	var err error
-	pass, err = helpers.GenerateHash("12345")
+	pass, err = helpers.GenerateHash("Ya123@aflkj")
 	if err != nil {
 		logger.Panic(err.Error(), logrus.Fields{constants.LoggerCategory: constants.LoggerCategorySeeder})
 	}

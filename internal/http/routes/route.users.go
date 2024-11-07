@@ -12,7 +12,7 @@ import (
 )
 
 type usersRoutes struct {
-	V1Handler      V1Handler.UserHandler
+	v1Handler      V1Handler.UserHandler
 	router         *gin.RouterGroup
 	db             *sqlx.DB
 	authMiddleware gin.HandlerFunc
@@ -23,7 +23,7 @@ func NewUsersRoute(router *gin.RouterGroup, db *sqlx.DB, jwtService jwt.JWTServi
 	V1UserUsecase := V1Usecase.NewUserUsecase(V1UserRepository, jwtService, mailer)
 	V1UserHandler := V1Handler.NewUserHandler(V1UserUsecase, redisCache, ristrettoCache)
 
-	return &usersRoutes{V1Handler: V1UserHandler, router: router, db: db, authMiddleware: authMiddleware}
+	return &usersRoutes{v1Handler: V1UserHandler, router: router, db: db, authMiddleware: authMiddleware}
 }
 
 func (r *usersRoutes) Routes() {
@@ -32,16 +32,16 @@ func (r *usersRoutes) Routes() {
 	{
 		// auth
 		V1AuhtRoute := V1Route.Group("/auth")
-		V1AuhtRoute.POST("/regis", r.V1Handler.Regis)
-		V1AuhtRoute.POST("/login", r.V1Handler.Login)
-		V1AuhtRoute.POST("/send-otp", r.V1Handler.SendOTP)
-		V1AuhtRoute.POST("/verif-otp", r.V1Handler.VerifOTP)
+		V1AuhtRoute.POST("/regis", r.v1Handler.Regis)
+		V1AuhtRoute.POST("/login", r.v1Handler.Login)
+		V1AuhtRoute.POST("/send-otp", r.v1Handler.SendOTP)
+		V1AuhtRoute.POST("/verif-otp", r.v1Handler.VerifOTP)
 
 		// users
 		userRoute := V1Route.Group("/users")
 		userRoute.Use(r.authMiddleware)
 		{
-			userRoute.GET("/me", r.V1Handler.GetUserData)
+			userRoute.GET("/me", r.v1Handler.GetUserData)
 			// ...
 		}
 	}

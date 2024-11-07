@@ -21,25 +21,25 @@ func init() {
 		{
 			Name:        "Keyboard",
 			Description: "lorem ipsum dolor sit amet",
-			Price:       240000,
+			Price:       20.90,
 			Stock:       23,
 		},
 		{
 			Name:        "Mouse",
 			Description: "lorem ipsum dolor sit amet",
-			Price:       200000,
+			Price:       11.99,
 			Stock:       100,
 		},
 		{
 			Name:        "Wifi Adapter",
 			Description: "lorem ipsum dolor sit amet",
-			Price:       150000,
+			Price:       29.99,
 			Stock:       234,
 		},
 		{
 			Name:        "Computer Fan",
 			Description: "lorem ipsum dolor sit amet",
-			Price:       100000,
+			Price:       31.99,
 			Stock:       200,
 		},
 	}

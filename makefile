@@ -23,3 +23,5 @@ coverage:
 	go tool cover -html=coverage.out -o coverage.html
 seed:
 	go run cmd/seed/main.go
+reset: 
+	go run cmd/migration/main.go -down && go run cmd/migration/main.go -up && go run cmd/seed/main.go
