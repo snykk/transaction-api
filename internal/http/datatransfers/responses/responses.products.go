@@ -10,7 +10,7 @@ type ProductResponse struct {
 	Id          int        `json:"product_id"`
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
-	Price       float32    `json:"price"`
+	Price       float64    `json:"price"`
 	Stock       int        `json:"stock"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at"`

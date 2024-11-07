@@ -63,6 +63,7 @@ func NewApp() (*App, error) {
 	api.GET("/", routes.RootHandler)
 	routes.NewUsersRoute(api, conn, jwtService, redisCache, ristrettoCache, authMiddleware, mailerService).Routes()
 	routes.NewProductsRoute(api, conn, ristrettoCache, authMiddleware, adminMiddleware).Routes()
+	routes.NewWalletRoute(api, conn, ristrettoCache, authMiddleware, adminMiddleware).Routes()
 
 	// we can add web pages if needed
 	// web := router.Group("web")

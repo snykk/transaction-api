@@ -9,7 +9,7 @@ type ProductDomain struct {
 	Id          int
 	Name        string
 	Description string
-	Price       float32
+	Price       float64
 	Stock       int
 	CreatedAt   time.Time
 	UpdatedAt   *time.Time

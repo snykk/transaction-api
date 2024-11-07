@@ -7,7 +7,7 @@ import (
 type ProductRequest struct {
 	Name        string  `json:"name" binding:"required"`
 	Description string  `json:"description" binding:"required"`
-	Price       float32 `json:"price" binding:"required,gt=0"`  // price lebih besar dari 0
+	Price       float64 `json:"price" binding:"required,gt=0"`  // price lebih besar dari 0
 	Stock       int     `json:"stock" binding:"required,gte=0"` // stock tidak negatif
 
 }
@@ -24,7 +24,7 @@ func (productRequest *ProductRequest) ToDomain() *V1Domains.ProductDomain {
 type ProductUpdateRequest struct {
 	Name        string  `json:"name" binding:"required"`
 	Description string  `json:"description" binding:"required"`
-	Price       float32 `json:"price" binding:"required,gt=0"`  // price lebih besar dari 0
+	Price       float64 `json:"price" binding:"required,gt=0"`  // price lebih besar dari 0
 	Stock       int     `json:"stock" binding:"required,gte=0"` // stock tidak negatif
 }
 
