@@ -26,9 +26,10 @@ type TransactionUsecase interface {
 	Deposit(ctx context.Context, transactionDom *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
 	Withdraw(ctx context.Context, transactionDom *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
 	Purchase(ctx context.Context, transactionData *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
+	History(ctx context.Context, userId string) (domains []TransactionDomain, statusCode int, err error)
 }
 
 type TransactionRepository interface {
 	BeginTx(ctx context.Context) (*sqlx.Tx, error)
-	Store(ctx context.Context, transactionDom *TransactionDomain) (TransactionDomain, error)
+	GetByUserId(ctx context.Context, userId string) ([]TransactionDomain, error)
 }

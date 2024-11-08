@@ -1,6 +1,8 @@
 package v1
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	V1Domains "github.com/snykk/transaction-api/internal/business/domains/v1"
 	"github.com/snykk/transaction-api/internal/constants"
@@ -19,6 +21,35 @@ func NewWalletHandler(walletUsecase V1Domains.WalletUsecase, ristrettoCache cach
 		walletUsecase:  walletUsecase,
 		ristrettoCache: ristrettoCache,
 	}
+}
+
+func (c *WalletHandler) GetAll(ctx *gin.Context) {
+	if val := c.ristrettoCache.Get("wallets"); val != nil {
+		NewSuccessResponse(ctx, http.StatusOK, "wallet data fetched successfully", map[string]interface{}{
+			"wallets": val,
+		})
+		return
+	}
+
+	ctxx := ctx.Request.Context()
+	listOfWalletDom, statusCode, err := c.walletUsecase.GetAll(ctxx)
+	if err != nil {
+		NewErrorResponse(ctx, statusCode, err.Error())
+		return
+	}
+
+	walletResponseList := responses.ToWalletResponseList(listOfWalletDom)
+
+	if walletResponseList == nil {
+		NewSuccessResponse(ctx, statusCode, "wallet data is empty", []int{})
+		return
+	}
+
+	go c.ristrettoCache.Set("wallets", walletResponseList)
+
+	NewSuccessResponse(ctx, statusCode, "wallet data fetched successfully", map[string]interface{}{
+		"wallets": walletResponseList,
+	})
 }
 
 func (c *WalletHandler) Init(ctx *gin.Context) {
@@ -57,25 +88,3 @@ func (c *WalletHandler) Info(ctx *gin.Context) {
 		"wallet": responses.FromWalletDomainV1(walletDom),
 	})
 }
-
-// func (c *WalletHandler) Deposit(ctx *gin.Context) {
-// 	var walletDepositRequest requests.WalletDepositRequest
-
-// 	if err := ctx.ShouldBindJSON(&walletDepositRequest); err != nil {
-// 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
-// 		return
-// 	}
-
-// 	ctxx := ctx.Request.Context()
-// 	b, statusCode, err := c.walletUsecase.Deposit(ctxx, walletDepositRequest.ToDomain())
-// 	if err != nil {
-// 		NewErrorResponse(ctx, statusCode, err.Error())
-// 		return
-// 	}
-
-// 	go c.ristrettoCache.Del("products")
-
-// 	NewSuccessResponse(ctx, statusCode, "product inserted successfully", map[string]interface{}{
-// 		"product": responses.FromProductDomainV1(b),
-// 	})
-// }

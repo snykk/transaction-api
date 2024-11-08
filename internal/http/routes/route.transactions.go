@@ -36,6 +36,8 @@ func (r *transactionRoutes) Routes() {
 		// authenticated user
 		transactionRoute.Use(r.authMiddleware)
 		{
+			transactionRoute.GET("/history", r.v1Handler.History)
+
 			transactionRoute.POST("/deposit", r.v1Handler.Deposit)
 			transactionRoute.POST("/withdraw", r.v1Handler.Withdraw)
 			transactionRoute.POST("/purchase", r.v1Handler.Purchase)

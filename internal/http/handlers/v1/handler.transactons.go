@@ -48,8 +48,8 @@ func (c *TransactionHandler) Deposit(ctx *gin.Context) {
 
 	go c.ristrettoCache.Del("transactions")
 
-	NewSuccessResponse(ctx, statusCode, "product inserted successfully", map[string]interface{}{
-		"product": responses.FromTransactionDomainV1(transactionDom),
+	NewSuccessResponse(ctx, statusCode, "deposit completed successfully", map[string]interface{}{
+		"transaction": responses.FromTransactionDomainV1(transactionDom),
 	})
 }
 
@@ -118,5 +118,23 @@ func (c *TransactionHandler) Purchase(ctx *gin.Context) {
 	// 7. Mengembalikan response sukses
 	NewSuccessResponse(ctx, statusCode, "purchase successful", map[string]interface{}{
 		"transaction": responses.FromTransactionDomainV1(transactionDom),
+	})
+}
+
+func (c *TransactionHandler) History(ctx *gin.Context) {
+	// get authenticated user from context
+	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
+
+	ctxx := ctx.Request.Context()
+	transactionDom, statusCode, err := c.transactionUsecase.History(ctxx, userClaims.UserID)
+	if err != nil {
+		NewErrorResponse(ctx, statusCode, err.Error())
+		return
+	}
+
+	go c.ristrettoCache.Del("transactions")
+
+	NewSuccessResponse(ctx, statusCode, "transaction history fetched successfully", map[string]interface{}{
+		"transactions": responses.ToTransactionResponseList(transactionDom),
 	})
 }

@@ -42,7 +42,7 @@ func (r *walletRoutes) Routes() {
 		walletRoute.Use(r.adminMiddleware)
 		{
 			// admin only
-			// walletRoute.GET("", r.v1Handler.GetAll)
+			walletRoute.GET("", r.v1Handler.GetAll)
 			// ...
 		}
 	}

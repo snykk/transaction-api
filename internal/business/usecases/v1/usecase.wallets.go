@@ -19,6 +19,16 @@ func NewWalletUsecase(repo V1Domains.WalletRepository) V1Domains.WalletUsecase {
 	}
 }
 
+func (uc *walletUsecase) GetAll(ctx context.Context) ([]V1Domains.WalletDomain, int, error) {
+	wallets, err := uc.repo.GetAll(ctx)
+
+	if err != nil {
+		return []V1Domains.WalletDomain{}, http.StatusInternalServerError, err
+	}
+
+	return wallets, http.StatusOK, nil
+}
+
 func (walletUC *walletUsecase) Init(ctx context.Context, userId string) (domain V1Domains.WalletDomain, statusCode int, err error) {
 	existingWallet, err := walletUC.repo.GetByUserId(ctx, userId)
 	if err == nil {

@@ -3,9 +3,11 @@ package v1
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	V1Domains "github.com/snykk/transaction-api/internal/business/domains/v1"
+	"github.com/snykk/transaction-api/internal/datasources/records"
 )
 
 type postgreTransactionRepository struct {
@@ -27,32 +29,31 @@ func (r *postgreTransactionRepository) BeginTx(ctx context.Context) (*sqlx.Tx, e
 	return r.conn.BeginTxx(ctx, txOptions)
 }
 
-func (r *postgreTransactionRepository) Store(ctx context.Context, transactionDom *V1Domains.TransactionDomain) (V1Domains.TransactionDomain, error) {
-	queryCreateTransaction := `
-		INSERT INTO transactions (transaction_id, wallet_id, amount, transaction_type, status, description, created_at)
-		VALUES (uuid_generate_v4(), $1, $2, $3, $4, $5, $6)
-		RETURNING transaction_id, wallet_id, amount, transaction_type, status, description, created_at
+func (r *postgreTransactionRepository) GetByUserId(ctx context.Context, userId string) ([]V1Domains.TransactionDomain, error) {
+	query := `
+		SELECT 
+			t.transaction_id,
+			t.wallet_id,
+			t.amount,
+			t.transaction_type,
+			t.created_at
+		FROM 
+			transactions t
+		JOIN 
+			wallets w ON t.wallet_id = w.wallet_id
+		WHERE 
+			w.user_id = $1
+		ORDER BY 
+			t.created_at DESC
 	`
 
-	row := r.conn.QueryRowContext(ctx, queryCreateTransaction,
-		transactionDom.WalletId,
-		transactionDom.Amount,
-		transactionDom.TransactionType,
-		transactionDom.CreatedAt,
-	)
+	fmt.Println(userId)
 
-	var newTransaction V1Domains.TransactionDomain
-
-	err := row.Scan(
-		&newTransaction.Id,
-		&newTransaction.WalletId,
-		&newTransaction.Amount,
-		&newTransaction.TransactionType,
-		&newTransaction.CreatedAt,
-	)
+	var transactions []records.Transaction
+	err := r.conn.SelectContext(ctx, &transactions, query, userId)
 	if err != nil {
-		return V1Domains.TransactionDomain{}, err
+		return nil, err
 	}
 
-	return newTransaction, nil
+	return records.ToArrayOfTransactionV1Domain(&transactions), nil
 }

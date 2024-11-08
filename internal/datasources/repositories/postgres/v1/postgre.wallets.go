@@ -19,6 +19,24 @@ func NewWalletRepository(conn *sqlx.DB) V1Domains.WalletRepository {
 	}
 }
 
+func (r *postgreWalletRepository) GetAll(ctx context.Context) ([]V1Domains.WalletDomain, error) {
+	query := `SELECT wallet_id, user_id, balance, created_at, updated_at FROM wallets`
+	var walletFromDB []records.Wallet
+	err := r.conn.SelectContext(ctx, &walletFromDB, query)
+	if err != nil {
+		return nil, err
+	}
+
+	// var convertedWalletDom []V1Domains.WalletDomain
+	// for _, val := range walletFromDB {
+	// 	convertedWalletDom = append(convertedWalletDom, val.ToV1Domain())
+	// }
+
+	walletlistDom := records.ToArrayOfWalletV1Domain(&walletFromDB)
+
+	return walletlistDom, nil
+}
+
 func (r *postgreWalletRepository) CreateByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, error) {
 	query := `
         INSERT INTO wallets (wallet_id, user_id, balance, created_at)

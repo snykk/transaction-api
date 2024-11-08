@@ -258,3 +258,13 @@ func (txUC *transactionUsecase) Purchase(ctx context.Context, transactionData *V
 	// Mengembalikan transaksi yang baru disimpan
 	return newTransaction, http.StatusOK, nil
 }
+
+func (uc *transactionUsecase) History(ctx context.Context, userId string) ([]V1Domains.TransactionDomain, int, error) {
+	userTransactionHistoryDom, err := uc.repo.GetByUserId(ctx, userId)
+
+	if err != nil {
+		return []V1Domains.TransactionDomain{}, http.StatusNotFound, errors.New("transaction history not found")
+	}
+
+	return userTransactionHistoryDom, http.StatusOK, nil
+}

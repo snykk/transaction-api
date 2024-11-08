@@ -30,6 +30,8 @@ func (p *Wallet) ToV1Domain() V1Domains.WalletDomain {
 func FromWalletV1Domain(p *V1Domains.WalletDomain) Wallet {
 	return Wallet{
 		Id:        p.Id,
+		UserId:    p.UserId,
+		Balance:   p.Balance,
 		CreatedAt: p.CreatedAt,
 		UpdatedAt: p.UpdatedAt,
 	}
