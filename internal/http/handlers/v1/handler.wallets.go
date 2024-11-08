@@ -32,7 +32,7 @@ func (c *WalletHandler) GetAll(ctx *gin.Context) {
 	}
 
 	ctxx := ctx.Request.Context()
-	listOfWalletDom, statusCode, err := c.walletUsecase.GetAll(ctxx)
+	listOfWalletDom, statusCode, err := c.walletUsecase.GetAllWallets(ctxx)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -75,7 +75,7 @@ func (c *WalletHandler) Info(ctx *gin.Context) {
 	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
 
 	ctxx := ctx.Request.Context()
-	walletDom, statusCode, err := c.walletUsecase.GetByUserId(ctxx, userClaims.UserID)
+	walletDom, statusCode, err := c.walletUsecase.GetWalletByUserId(ctxx, userClaims.UserID)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return

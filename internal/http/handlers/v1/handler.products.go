@@ -33,7 +33,7 @@ func (c *ProductHandler) Store(ctx *gin.Context) {
 	}
 
 	ctxx := ctx.Request.Context()
-	b, statusCode, err := c.productUsecase.Store(ctxx, productRequest.ToDomain())
+	b, statusCode, err := c.productUsecase.StoreProduct(ctxx, productRequest.ToDomain())
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -55,7 +55,7 @@ func (c *ProductHandler) GetAll(ctx *gin.Context) {
 	}
 
 	ctxx := ctx.Request.Context()
-	listOfProducts, statusCode, err := c.productUsecase.GetAll(ctxx)
+	listOfProducts, statusCode, err := c.productUsecase.GetAllProducts(ctxx)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -86,7 +86,7 @@ func (c *ProductHandler) GetById(ctx *gin.Context) {
 
 	ctxx := ctx.Request.Context()
 
-	productDomain, statusCode, err := c.productUsecase.GetById(ctxx, id)
+	productDomain, statusCode, err := c.productUsecase.GetProductById(ctxx, id)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -112,7 +112,7 @@ func (c *ProductHandler) Update(ctx *gin.Context) {
 
 	ctxx := ctx.Request.Context()
 	productDomain := productUpdateRequest.ToDomain()
-	newProduct, statusCode, err := c.productUsecase.Update(ctxx, productDomain, id)
+	newProduct, statusCode, err := c.productUsecase.UpdateProduct(ctxx, productDomain, id)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -129,7 +129,7 @@ func (c *ProductHandler) Delete(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
 
 	ctxx := ctx.Request.Context()
-	statusCode, err := c.productUsecase.Delete(ctxx, id)
+	statusCode, err := c.productUsecase.DeleteProduct(ctxx, id)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return

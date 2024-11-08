@@ -16,17 +16,17 @@ type ProductDomain struct {
 }
 
 type ProductUsecase interface {
-	GetAll(ctx context.Context) (domains []ProductDomain, statusCode int, err error)
-	Store(ctx context.Context, product *ProductDomain) (domain ProductDomain, statusCode int, err error)
-	GetById(ctx context.Context, id int) (domain ProductDomain, statusCode int, err error)
-	Update(ctx context.Context, product *ProductDomain, id int) (domain ProductDomain, statusCode int, err error)
-	Delete(ctx context.Context, id int) (statusCode int, err error)
+	GetAllProducts(ctx context.Context) (domains []ProductDomain, statusCode int, err error)
+	StoreProduct(ctx context.Context, product *ProductDomain) (domain ProductDomain, statusCode int, err error)
+	GetProductById(ctx context.Context, id int) (domain ProductDomain, statusCode int, err error)
+	UpdateProduct(ctx context.Context, product *ProductDomain, id int) (domain ProductDomain, statusCode int, err error)
+	DeleteProduct(ctx context.Context, id int) (statusCode int, err error)
 }
 
 type ProductRepository interface {
-	GetAll(ctx context.Context) ([]ProductDomain, error)
-	Store(ctx context.Context, product *ProductDomain) (ProductDomain, error)
-	GetById(ctx context.Context, id int) (ProductDomain, error)
-	Update(ctx context.Context, product *ProductDomain) (err error)
-	Delete(ctx context.Context, id int) error
+	GetAllProducts(ctx context.Context) ([]ProductDomain, error)
+	StoreProduct(ctx context.Context, product *ProductDomain) (ProductDomain, error)
+	GetProductById(ctx context.Context, id int) (ProductDomain, error)
+	UpdateProduct(ctx context.Context, product *ProductDomain) (err error)
+	DeleteProduct(ctx context.Context, id int) error
 }

@@ -2,7 +2,6 @@ package v1
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	V1Domains "github.com/snykk/transaction-api/internal/business/domains/v1"
@@ -19,8 +18,8 @@ func NewProductUsecase(repo V1Domains.ProductRepository) V1Domains.ProductUsecas
 	}
 }
 
-func (uc *productUsecase) GetAll(ctx context.Context) ([]V1Domains.ProductDomain, int, error) {
-	products, err := uc.repo.GetAll(ctx)
+func (uc *productUsecase) GetAllProducts(ctx context.Context) ([]V1Domains.ProductDomain, int, error) {
+	products, err := uc.repo.GetAllProducts(ctx)
 
 	if err != nil {
 		return []V1Domains.ProductDomain{}, http.StatusInternalServerError, err
@@ -29,16 +28,16 @@ func (uc *productUsecase) GetAll(ctx context.Context) ([]V1Domains.ProductDomain
 	return products, http.StatusOK, nil
 }
 
-func (uc *productUsecase) Store(ctx context.Context, product *V1Domains.ProductDomain) (V1Domains.ProductDomain, int, error) {
-	result, err := uc.repo.Store(ctx, product)
+func (uc *productUsecase) StoreProduct(ctx context.Context, product *V1Domains.ProductDomain) (V1Domains.ProductDomain, int, error) {
+	result, err := uc.repo.StoreProduct(ctx, product)
 	if err != nil {
 		return result, http.StatusInternalServerError, err
 	}
 	return result, http.StatusCreated, nil
 }
 
-func (uc *productUsecase) GetById(ctx context.Context, id int) (V1Domains.ProductDomain, int, error) {
-	result, err := uc.repo.GetById(ctx, id)
+func (uc *productUsecase) GetProductById(ctx context.Context, id int) (V1Domains.ProductDomain, int, error) {
+	result, err := uc.repo.GetProductById(ctx, id)
 
 	if err != nil {
 		statusCode, _ := utils.MapDBError(err)
@@ -48,13 +47,13 @@ func (uc *productUsecase) GetById(ctx context.Context, id int) (V1Domains.Produc
 	return result, http.StatusOK, nil
 }
 
-func (uc *productUsecase) Update(ctx context.Context, product *V1Domains.ProductDomain, id int) (V1Domains.ProductDomain, int, error) {
+func (uc *productUsecase) UpdateProduct(ctx context.Context, product *V1Domains.ProductDomain, id int) (V1Domains.ProductDomain, int, error) {
 	product.Id = id
-	if err := uc.repo.Update(ctx, product); err != nil {
+	if err := uc.repo.UpdateProduct(ctx, product); err != nil {
 		return V1Domains.ProductDomain{}, http.StatusInternalServerError, err
 	}
 
-	newProduct, err := uc.repo.GetById(ctx, id)
+	newProduct, err := uc.repo.GetProductById(ctx, id)
 	if err != nil {
 		statusCode, _ := utils.MapDBError(err)
 		return V1Domains.ProductDomain{}, statusCode, err
@@ -63,15 +62,16 @@ func (uc *productUsecase) Update(ctx context.Context, product *V1Domains.Product
 	return newProduct, http.StatusOK, err
 }
 
-func (uc *productUsecase) Delete(ctx context.Context, id int) (int, error) {
-	_, err := uc.repo.GetById(ctx, id)
+func (uc *productUsecase) DeleteProduct(ctx context.Context, id int) (int, error) {
+	_, err := uc.repo.GetProductById(ctx, id)
 	if err != nil { // check wheter data is exists or not
-		return http.StatusNotFound, errors.New("product not found")
+		statusCode, _ := utils.MapDBError(err)
+		return statusCode, err
 	}
-	err = uc.repo.Delete(ctx, id)
+	err = uc.repo.DeleteProduct(ctx, id)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
 
-	return http.StatusOK, nil
+	return http.StatusNoContent, nil
 }

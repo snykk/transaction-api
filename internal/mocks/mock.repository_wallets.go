@@ -14,12 +14,12 @@ type WalletRepository struct {
 	mock.Mock
 }
 
-// CreateByUserId provides a mock function with given fields: ctx, userId
-func (_m *WalletRepository) CreateByUserId(ctx context.Context, userId string) (v1.WalletDomain, error) {
+// CreateWalletByUserId provides a mock function with given fields: ctx, userId
+func (_m *WalletRepository) CreateWalletByUserId(ctx context.Context, userId string) (v1.WalletDomain, error) {
 	ret := _m.Called(ctx, userId)
 
 	if len(ret) == 0 {
-		panic("no return value specified for CreateByUserId")
+		panic("no return value specified for CreateWalletByUserId")
 	}
 
 	var r0 v1.WalletDomain
@@ -42,12 +42,12 @@ func (_m *WalletRepository) CreateByUserId(ctx context.Context, userId string) (
 	return r0, r1
 }
 
-// GetAll provides a mock function with given fields: ctx
-func (_m *WalletRepository) GetAll(ctx context.Context) ([]v1.WalletDomain, error) {
+// GetAllWallets provides a mock function with given fields: ctx
+func (_m *WalletRepository) GetAllWallets(ctx context.Context) ([]v1.WalletDomain, error) {
 	ret := _m.Called(ctx)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetAll")
+		panic("no return value specified for GetAllWallets")
 	}
 
 	var r0 []v1.WalletDomain
@@ -72,12 +72,12 @@ func (_m *WalletRepository) GetAll(ctx context.Context) ([]v1.WalletDomain, erro
 	return r0, r1
 }
 
-// GetByUserId provides a mock function with given fields: ctx, userId
-func (_m *WalletRepository) GetByUserId(ctx context.Context, userId string) (v1.WalletDomain, error) {
+// GetWalletByUserId provides a mock function with given fields: ctx, userId
+func (_m *WalletRepository) GetWalletByUserId(ctx context.Context, userId string) (v1.WalletDomain, error) {
 	ret := _m.Called(ctx, userId)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetByUserId")
+		panic("no return value specified for GetWalletByUserId")
 	}
 
 	var r0 v1.WalletDomain

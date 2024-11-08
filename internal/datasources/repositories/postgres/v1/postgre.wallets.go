@@ -19,7 +19,7 @@ func NewWalletRepository(conn *sqlx.DB) V1Domains.WalletRepository {
 	}
 }
 
-func (r *postgreWalletRepository) GetAll(ctx context.Context) ([]V1Domains.WalletDomain, error) {
+func (r *postgreWalletRepository) GetAllWallets(ctx context.Context) ([]V1Domains.WalletDomain, error) {
 	query := `SELECT wallet_id, user_id, balance, created_at, updated_at FROM wallets`
 	var walletFromDB []records.Wallet
 	err := r.conn.SelectContext(ctx, &walletFromDB, query)
@@ -37,7 +37,7 @@ func (r *postgreWalletRepository) GetAll(ctx context.Context) ([]V1Domains.Walle
 	return walletlistDom, nil
 }
 
-func (r *postgreWalletRepository) CreateByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, error) {
+func (r *postgreWalletRepository) CreateWalletByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, error) {
 	query := `
         INSERT INTO wallets (wallet_id, user_id, balance, created_at)
         VALUES (uuid_generate_v4(), $1, 0, $2)
@@ -53,7 +53,7 @@ func (r *postgreWalletRepository) CreateByUserId(ctx context.Context, userId str
 	return result.ToV1Domain(), nil
 }
 
-func (r *postgreWalletRepository) GetByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, error) {
+func (r *postgreWalletRepository) GetWalletByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, error) {
 	query := `
         SELECT 
             w.wallet_id, w.user_id, w.balance, w.created_at, w.updated_at,

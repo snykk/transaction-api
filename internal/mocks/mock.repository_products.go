@@ -14,12 +14,12 @@ type ProductRepository struct {
 	mock.Mock
 }
 
-// Delete provides a mock function with given fields: ctx, id
-func (_m *ProductRepository) Delete(ctx context.Context, id int) error {
+// DeleteProduct provides a mock function with given fields: ctx, id
+func (_m *ProductRepository) DeleteProduct(ctx context.Context, id int) error {
 	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Delete")
+		panic("no return value specified for DeleteProduct")
 	}
 
 	var r0 error
@@ -32,12 +32,12 @@ func (_m *ProductRepository) Delete(ctx context.Context, id int) error {
 	return r0
 }
 
-// GetAll provides a mock function with given fields: ctx
-func (_m *ProductRepository) GetAll(ctx context.Context) ([]v1.ProductDomain, error) {
+// GetAllProducts provides a mock function with given fields: ctx
+func (_m *ProductRepository) GetAllProducts(ctx context.Context) ([]v1.ProductDomain, error) {
 	ret := _m.Called(ctx)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetAll")
+		panic("no return value specified for GetAllProducts")
 	}
 
 	var r0 []v1.ProductDomain
@@ -62,12 +62,12 @@ func (_m *ProductRepository) GetAll(ctx context.Context) ([]v1.ProductDomain, er
 	return r0, r1
 }
 
-// GetById provides a mock function with given fields: ctx, id
-func (_m *ProductRepository) GetById(ctx context.Context, id int) (v1.ProductDomain, error) {
+// GetProductById provides a mock function with given fields: ctx, id
+func (_m *ProductRepository) GetProductById(ctx context.Context, id int) (v1.ProductDomain, error) {
 	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetById")
+		panic("no return value specified for GetProductById")
 	}
 
 	var r0 v1.ProductDomain
@@ -90,12 +90,12 @@ func (_m *ProductRepository) GetById(ctx context.Context, id int) (v1.ProductDom
 	return r0, r1
 }
 
-// Store provides a mock function with given fields: ctx, product
-func (_m *ProductRepository) Store(ctx context.Context, product *v1.ProductDomain) (v1.ProductDomain, error) {
+// StoreProduct provides a mock function with given fields: ctx, product
+func (_m *ProductRepository) StoreProduct(ctx context.Context, product *v1.ProductDomain) (v1.ProductDomain, error) {
 	ret := _m.Called(ctx, product)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Store")
+		panic("no return value specified for StoreProduct")
 	}
 
 	var r0 v1.ProductDomain
@@ -118,12 +118,12 @@ func (_m *ProductRepository) Store(ctx context.Context, product *v1.ProductDomai
 	return r0, r1
 }
 
-// Update provides a mock function with given fields: ctx, product
-func (_m *ProductRepository) Update(ctx context.Context, product *v1.ProductDomain) error {
+// UpdateProduct provides a mock function with given fields: ctx, product
+func (_m *ProductRepository) UpdateProduct(ctx context.Context, product *v1.ProductDomain) error {
 	ret := _m.Called(ctx, product)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Update")
+		panic("no return value specified for UpdateProduct")
 	}
 
 	var r0 error

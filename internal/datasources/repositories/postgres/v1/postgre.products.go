@@ -19,7 +19,7 @@ func NewProductRepository(conn *sqlx.DB) V1Domains.ProductRepository {
 	}
 }
 
-func (r *postgreProductRepository) Store(ctx context.Context, p *V1Domains.ProductDomain) (V1Domains.ProductDomain, error) {
+func (r *postgreProductRepository) StoreProduct(ctx context.Context, p *V1Domains.ProductDomain) (V1Domains.ProductDomain, error) {
 	query := `
 		INSERT INTO products (name, description, price, stock, created_at)
 		VALUES ($1, $2, $3, $4, $5)
@@ -35,7 +35,7 @@ func (r *postgreProductRepository) Store(ctx context.Context, p *V1Domains.Produ
 	return result.ToV1Domain(), nil
 }
 
-func (r *postgreProductRepository) GetAll(ctx context.Context) ([]V1Domains.ProductDomain, error) {
+func (r *postgreProductRepository) GetAllProducts(ctx context.Context) ([]V1Domains.ProductDomain, error) {
 	query := `SELECT product_id, name, description, price, stock, created_at, updated_at FROM products`
 	var productsFromDB []records.Product
 	err := r.conn.SelectContext(ctx, &productsFromDB, query)
@@ -51,7 +51,7 @@ func (r *postgreProductRepository) GetAll(ctx context.Context) ([]V1Domains.Prod
 	return convertedProducts, nil
 }
 
-func (r *postgreProductRepository) GetById(ctx context.Context, id int) (V1Domains.ProductDomain, error) {
+func (r *postgreProductRepository) GetProductById(ctx context.Context, id int) (V1Domains.ProductDomain, error) {
 	query := `SELECT product_id, name, description, price, stock, created_at, updated_at FROM products WHERE product_id = $1`
 	var product records.Product
 	err := r.conn.GetContext(ctx, &product, query, id)
@@ -62,7 +62,7 @@ func (r *postgreProductRepository) GetById(ctx context.Context, id int) (V1Domai
 	return product.ToV1Domain(), nil
 }
 
-func (r *postgreProductRepository) Update(ctx context.Context, p *V1Domains.ProductDomain) error {
+func (r *postgreProductRepository) UpdateProduct(ctx context.Context, p *V1Domains.ProductDomain) error {
 	query := `
 		UPDATE products
 		SET name = $1, description = $2, price = $3, stock = $4, updated_at = $5
@@ -73,7 +73,7 @@ func (r *postgreProductRepository) Update(ctx context.Context, p *V1Domains.Prod
 	return err
 }
 
-func (r *postgreProductRepository) Delete(ctx context.Context, id int) error {
+func (r *postgreProductRepository) DeleteProduct(ctx context.Context, id int) error {
 	query := `DELETE FROM products WHERE product_id = $1`
 	_, err := r.conn.ExecContext(ctx, query, id)
 	return err

@@ -20,8 +20,8 @@ func NewWalletUsecase(repo V1Domains.WalletRepository) V1Domains.WalletUsecase {
 	}
 }
 
-func (uc *walletUsecase) GetAll(ctx context.Context) ([]V1Domains.WalletDomain, int, error) {
-	wallets, err := uc.repo.GetAll(ctx)
+func (uc *walletUsecase) GetAllWallets(ctx context.Context) ([]V1Domains.WalletDomain, int, error) {
+	wallets, err := uc.repo.GetAllWallets(ctx)
 
 	if err != nil {
 		return []V1Domains.WalletDomain{}, http.StatusInternalServerError, err
@@ -31,7 +31,7 @@ func (uc *walletUsecase) GetAll(ctx context.Context) ([]V1Domains.WalletDomain, 
 }
 
 func (walletUC *walletUsecase) Init(ctx context.Context, userId string) (domain V1Domains.WalletDomain, statusCode int, err error) {
-	existingWallet, err := walletUC.repo.GetByUserId(ctx, userId)
+	existingWallet, err := walletUC.repo.GetWalletByUserId(ctx, userId)
 	if err == nil {
 		return existingWallet, http.StatusConflict, errors.New("wallet already exists for this user")
 	}
@@ -40,12 +40,12 @@ func (walletUC *walletUsecase) Init(ctx context.Context, userId string) (domain 
 		return V1Domains.WalletDomain{}, http.StatusInternalServerError, err
 	}
 
-	walletWithoutRelationDom, err := walletUC.repo.CreateByUserId(ctx, userId)
+	_, err = walletUC.repo.CreateWalletByUserId(ctx, userId)
 	if err != nil {
-		return walletWithoutRelationDom, http.StatusInternalServerError, err
+		return V1Domains.WalletDomain{}, http.StatusInternalServerError, err
 	}
 
-	walletWithRelationDom, err := walletUC.repo.GetByUserId(ctx, userId)
+	walletWithRelationDom, err := walletUC.repo.GetWalletByUserId(ctx, userId)
 	if err != nil {
 		return walletWithRelationDom, http.StatusInternalServerError, err
 	}
@@ -53,8 +53,8 @@ func (walletUC *walletUsecase) Init(ctx context.Context, userId string) (domain 
 	return walletWithRelationDom, http.StatusCreated, nil
 }
 
-func (walletUC *walletUsecase) GetByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, int, error) {
-	walletDom, err := walletUC.repo.GetByUserId(ctx, userId)
+func (walletUC *walletUsecase) GetWalletByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, int, error) {
+	walletDom, err := walletUC.repo.GetWalletByUserId(ctx, userId)
 
 	if err != nil {
 		statusCode, _ := utils.MapDBError(err)
