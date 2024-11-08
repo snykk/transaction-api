@@ -7,6 +7,7 @@ import (
 	"time"
 
 	V1Domains "github.com/snykk/transaction-api/internal/business/domains/v1"
+	"github.com/snykk/transaction-api/internal/constants"
 )
 
 type transactionUsecase struct {
@@ -77,7 +78,7 @@ func (txUC *transactionUsecase) Deposit(ctx context.Context, transactionData *V1
 		VALUES (uuid_generate_v4(), $1, $2, $3, $4)
 		RETURNING transaction_id, wallet_id, amount, transaction_type, created_at
 	`
-	err = tx.QueryRowContext(ctx, queryCreateTransaction, wallet.Id, transactionData.Amount, "deposit", time.Now()).
+	err = tx.QueryRowContext(ctx, queryCreateTransaction, wallet.Id, transactionData.Amount, constants.TransactionTypeDeposit, time.Now()).
 		Scan(&newTransaction.Id, &newTransaction.WalletId, &newTransaction.Amount, &newTransaction.TransactionType, &newTransaction.CreatedAt)
 	if err != nil {
 		return V1Domains.TransactionDomain{}, http.StatusInternalServerError, err
@@ -148,7 +149,7 @@ func (txUC *transactionUsecase) Withdraw(ctx context.Context, transactionData *V
 		VALUES (uuid_generate_v4(), $1, $2, $3, $4)
 		RETURNING transaction_id, wallet_id, amount, transaction_type, created_at
 	`
-	err = tx.QueryRowContext(ctx, queryCreateTransaction, wallet.Id, transactionData.Amount, "withdraw", time.Now()).
+	err = tx.QueryRowContext(ctx, queryCreateTransaction, wallet.Id, transactionData.Amount, constants.TransactionTypeWithdraw, time.Now()).
 		Scan(&newTransaction.Id, &newTransaction.WalletId, &newTransaction.Amount, &newTransaction.TransactionType, &newTransaction.CreatedAt)
 	if err != nil {
 		return V1Domains.TransactionDomain{}, http.StatusInternalServerError, err
