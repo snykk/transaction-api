@@ -38,7 +38,7 @@ func (r *transactionRoutes) Routes() {
 		{
 			transactionRoute.POST("/deposit", r.v1Handler.Deposit)
 			transactionRoute.POST("/withdraw", r.v1Handler.Withdraw)
-			// transactionRoute.POST("/purchase", r.v1Handler.Purchase)
+			transactionRoute.POST("/purchase", r.v1Handler.Purchase)
 		}
 
 		// admin only

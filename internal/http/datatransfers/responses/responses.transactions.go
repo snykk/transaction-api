@@ -25,7 +25,7 @@ func FromTransactionDomainV1(b V1Domains.TransactionDomain) TransactionResponse 
 		WalletId:        b.WalletId,
 		ProductId:       b.ProductId,
 		Amount:          b.Amount,
-		Quantity:        &b.Quantity,
+		Quantity:        b.Quantity,
 		TransactionType: b.TransactionType,
 		CreatedAt:       b.CreatedAt,
 		UpdatedAt:       &b.UpdatedAt,

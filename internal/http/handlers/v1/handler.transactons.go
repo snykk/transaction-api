@@ -84,3 +84,37 @@ func (c *TransactionHandler) Withdraw(ctx *gin.Context) {
 		"transaction": responses.FromTransactionDomainV1(transactionDom),
 	})
 }
+
+func (c *TransactionHandler) Purchase(ctx *gin.Context) {
+	// 1. Bind request body ke struct TransactionPurchaseRequest
+	var purchaseRequest requests.TransactionPurchaseRequest
+
+	// 2. Get authenticated user from context
+	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
+
+	// 3. Validasi input request
+	if err := ctx.ShouldBindJSON(&purchaseRequest); err != nil {
+		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	// 4. Mapping request ke domain dan menambahkan UserId dari authenticated user
+	trDom := purchaseRequest.ToDomain()
+	trDom.Wallet.UserId = userClaims.UserID
+
+	// 5. Memanggil usecase untuk melakukan purchase
+	ctxx := ctx.Request.Context()
+	transactionDom, statusCode, err := c.transactionUsecase.Purchase(ctxx, trDom)
+	if err != nil {
+		NewErrorResponse(ctx, statusCode, err.Error())
+		return
+	}
+
+	// 6. Menghapus cache transaksi jika diperlukan (misal menggunakan ristretto)
+	go c.ristrettoCache.Del("transactions")
+
+	// 7. Mengembalikan response sukses
+	NewSuccessResponse(ctx, statusCode, "purchase successful", map[string]interface{}{
+		"transaction": responses.FromTransactionDomainV1(transactionDom),
+	})
+}

@@ -14,7 +14,7 @@ type TransactionDomain struct {
 	ProductId       *int // Nullable, karena transaksi deposit tidak melibatkan produk
 	Product         ProductDomain
 	Amount          float64
-	Quantity        int
+	Quantity        *int
 	TransactionType string
 	// Status          string
 	// Description     string
@@ -25,6 +25,7 @@ type TransactionDomain struct {
 type TransactionUsecase interface {
 	Deposit(ctx context.Context, transactionDom *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
 	Withdraw(ctx context.Context, transactionDom *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
+	Purchase(ctx context.Context, transactionData *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
 }
 
 type TransactionRepository interface {

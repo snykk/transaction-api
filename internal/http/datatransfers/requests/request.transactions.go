@@ -16,3 +16,15 @@ func (w *TransactionDepositOrWithdrawRequest) ToDomain() *V1Domains.TransactionD
 		// Description: w.Description,
 	}
 }
+
+type TransactionPurchaseRequest struct {
+	ProductId int `json:"product_id" binding:"required"`    // price lebih besar dari 0
+	Quantity  int `json:"quantity" binding:"required,gt=0"` // price lebih besar dari 0
+}
+
+func (w *TransactionPurchaseRequest) ToDomain() *V1Domains.TransactionDomain {
+	return &V1Domains.TransactionDomain{
+		ProductId: &w.ProductId,
+		Quantity:  &w.Quantity,
+	}
+}
