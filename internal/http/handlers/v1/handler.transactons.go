@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -112,6 +113,7 @@ func (c *TransactionHandler) Purchase(ctx *gin.Context) {
 
 	// 6. Menghapus cache transaksi jika diperlukan (misal menggunakan ristretto)
 	go c.ristrettoCache.Del("transactions")
+	go c.ristrettoCache.Del("products", fmt.Sprintf("product/%d", *transactionDom.ProductId))
 
 	// 7. Mengembalikan response sukses
 	NewSuccessResponse(ctx, statusCode, "purchase successful", map[string]interface{}{
