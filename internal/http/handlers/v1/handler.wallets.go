@@ -57,3 +57,25 @@ func (c *WalletHandler) Info(ctx *gin.Context) {
 		"wallet": responses.FromWalletDomainV1(walletDom),
 	})
 }
+
+// func (c *WalletHandler) Deposit(ctx *gin.Context) {
+// 	var walletDepositRequest requests.WalletDepositRequest
+
+// 	if err := ctx.ShouldBindJSON(&walletDepositRequest); err != nil {
+// 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+// 		return
+// 	}
+
+// 	ctxx := ctx.Request.Context()
+// 	b, statusCode, err := c.walletUsecase.Deposit(ctxx, walletDepositRequest.ToDomain())
+// 	if err != nil {
+// 		NewErrorResponse(ctx, statusCode, err.Error())
+// 		return
+// 	}
+
+// 	go c.ristrettoCache.Del("products")
+
+// 	NewSuccessResponse(ctx, statusCode, "product inserted successfully", map[string]interface{}{
+// 		"product": responses.FromProductDomainV1(b),
+// 	})
+// }

@@ -6,5 +6,3 @@ CREATE TABLE wallets (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
-CREATE INDEX idx_wallet_id ON wallets(wallet_id);

@@ -42,8 +42,8 @@ func (walletUC *walletUsecase) Init(ctx context.Context, userId string) (domain 
 	return walletWithRelationDom, http.StatusCreated, nil
 }
 
-func (uc *walletUsecase) GetByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, int, error) {
-	walletDom, err := uc.repo.GetByUserId(ctx, userId)
+func (walletUC *walletUsecase) GetByUserId(ctx context.Context, userId string) (V1Domains.WalletDomain, int, error) {
+	walletDom, err := walletUC.repo.GetByUserId(ctx, userId)
 
 	if err != nil {
 		return V1Domains.WalletDomain{}, http.StatusNotFound, errors.New("wallet not found")
