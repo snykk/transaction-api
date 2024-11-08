@@ -26,12 +26,12 @@ func NewTransactionHandler(transactionUsecase V1Domains.TransactionUsecase, rist
 }
 
 func (c *TransactionHandler) GetAll(ctx *gin.Context) {
-	if val := c.ristrettoCache.Get("transactions"); val != nil {
-		NewSuccessResponse(ctx, http.StatusOK, "transaction data fetched successfully", map[string]interface{}{
-			"transactions": val,
-		})
-		return
-	}
+	// if val := c.ristrettoCache.Get("transactions"); val != nil {
+	// 	NewSuccessResponse(ctx, http.StatusOK, "transaction data fetched successfully", map[string]interface{}{
+	// 		"transactions": val,
+	// 	})
+	// 	return
+	// }
 
 	ctxx := ctx.Request.Context()
 	listOfTransactinsDom, statusCode, err := c.transactionUsecase.GetAll(ctxx)
@@ -49,7 +49,7 @@ func (c *TransactionHandler) GetAll(ctx *gin.Context) {
 
 	go c.ristrettoCache.Set("transactions", transactionResponse)
 
-	NewSuccessResponse(ctx, statusCode, "transaction data fetched successfully", map[string]interface{}{
+	NewSuccessResponse(ctx, statusCode, "transaction data fetched successfullssy", map[string]interface{}{
 		"transactions": transactionResponse,
 	})
 }

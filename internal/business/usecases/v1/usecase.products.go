@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	V1Domains "github.com/snykk/transaction-api/internal/business/domains/v1"
+	"github.com/snykk/transaction-api/internal/utils"
 )
 
 type productUsecase struct {
@@ -40,7 +41,8 @@ func (uc *productUsecase) GetById(ctx context.Context, id int) (V1Domains.Produc
 	result, err := uc.repo.GetById(ctx, id)
 
 	if err != nil {
-		return V1Domains.ProductDomain{}, http.StatusNotFound, errors.New("product not found")
+		statusCode, _ := utils.MapDBError(err)
+		return V1Domains.ProductDomain{}, statusCode, err
 	}
 
 	return result, http.StatusOK, nil
@@ -54,7 +56,8 @@ func (uc *productUsecase) Update(ctx context.Context, product *V1Domains.Product
 
 	newProduct, err := uc.repo.GetById(ctx, id)
 	if err != nil {
-		return V1Domains.ProductDomain{}, http.StatusNotFound, err
+		statusCode, _ := utils.MapDBError(err)
+		return V1Domains.ProductDomain{}, statusCode, err
 	}
 
 	return newProduct, http.StatusOK, err

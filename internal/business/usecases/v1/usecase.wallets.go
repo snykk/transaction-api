@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	V1Domains "github.com/snykk/transaction-api/internal/business/domains/v1"
+	"github.com/snykk/transaction-api/internal/utils"
 )
 
 type walletUsecase struct {
@@ -56,7 +57,8 @@ func (walletUC *walletUsecase) GetByUserId(ctx context.Context, userId string) (
 	walletDom, err := walletUC.repo.GetByUserId(ctx, userId)
 
 	if err != nil {
-		return V1Domains.WalletDomain{}, http.StatusNotFound, errors.New("wallet not found")
+		statusCode, _ := utils.MapDBError(err)
+		return V1Domains.WalletDomain{}, statusCode, err
 	}
 
 	return walletDom, http.StatusOK, nil

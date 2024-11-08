@@ -8,6 +8,7 @@ import (
 
 	V1Domains "github.com/snykk/transaction-api/internal/business/domains/v1"
 	"github.com/snykk/transaction-api/internal/constants"
+	"github.com/snykk/transaction-api/internal/utils"
 )
 
 type transactionUsecase struct {
@@ -264,7 +265,8 @@ func (uc *transactionUsecase) History(ctx context.Context, userId string) ([]V1D
 	userTransactionHistoryDom, err := uc.repo.GetByUserId(ctx, userId)
 
 	if err != nil {
-		return []V1Domains.TransactionDomain{}, http.StatusNotFound, errors.New("transaction history not found")
+		statusCode, _ := utils.MapDBError(err)
+		return []V1Domains.TransactionDomain{}, statusCode, err
 	}
 
 	return userTransactionHistoryDom, http.StatusOK, nil
@@ -274,7 +276,8 @@ func (uc *transactionUsecase) GetAll(ctx context.Context) ([]V1Domains.Transacti
 	transactionDom, err := uc.repo.GetAll(ctx)
 
 	if err != nil {
-		return []V1Domains.TransactionDomain{}, http.StatusNotFound, errors.New("transaction data not found")
+		statusCode, _ := utils.MapDBError(err)
+		return []V1Domains.TransactionDomain{}, statusCode, err
 	}
 
 	return transactionDom, http.StatusOK, nil
