@@ -269,3 +269,13 @@ func (uc *transactionUsecase) History(ctx context.Context, userId string) ([]V1D
 
 	return userTransactionHistoryDom, http.StatusOK, nil
 }
+
+func (uc *transactionUsecase) GetAll(ctx context.Context) ([]V1Domains.TransactionDomain, int, error) {
+	transactionDom, err := uc.repo.GetAll(ctx)
+
+	if err != nil {
+		return []V1Domains.TransactionDomain{}, http.StatusNotFound, errors.New("transaction data not found")
+	}
+
+	return transactionDom, http.StatusOK, nil
+}

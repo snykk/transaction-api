@@ -47,7 +47,7 @@ func (r *transactionRoutes) Routes() {
 		transactionRoute.Use(r.adminMiddleware)
 		{
 			// admin only
-			// transactionRoute.GET("", r.v1Handler.GetAll)
+			transactionRoute.GET("", r.v1Handler.GetAll)
 			// ...
 		}
 	}

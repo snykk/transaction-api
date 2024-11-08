@@ -23,6 +23,7 @@ type TransactionDomain struct {
 }
 
 type TransactionUsecase interface {
+	GetAll(ctx context.Context) (domains []TransactionDomain, statusCode int, err error)
 	Deposit(ctx context.Context, transactionDom *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
 	Withdraw(ctx context.Context, transactionDom *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
 	Purchase(ctx context.Context, transactionData *TransactionDomain) (domain TransactionDomain, statusCode int, err error)
@@ -31,5 +32,6 @@ type TransactionUsecase interface {
 
 type TransactionRepository interface {
 	BeginTx(ctx context.Context) (*sqlx.Tx, error)
+	GetAll(ctx context.Context) ([]TransactionDomain, error)
 	GetByUserId(ctx context.Context, userId string) ([]TransactionDomain, error)
 }

@@ -57,3 +57,14 @@ func (r *postgreTransactionRepository) GetByUserId(ctx context.Context, userId s
 
 	return records.ToArrayOfTransactionV1Domain(&transactions), nil
 }
+
+func (r *postgreTransactionRepository) GetAll(ctx context.Context) ([]V1Domains.TransactionDomain, error) {
+	query := `SELECT transaction_id, wallet_id, amount, transaction_type, created_at FROM transactions`
+	var transactionRecord []records.Transaction
+	err := r.conn.SelectContext(ctx, &transactionRecord, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return records.ToArrayOfTransactionV1Domain(&transactionRecord), nil
+}
