@@ -3,8 +3,6 @@ package v1
 import (
 	"context"
 	"time"
-
-	"github.com/jmoiron/sqlx"
 )
 
 type TransactionDomain struct {
@@ -31,7 +29,6 @@ type TransactionUsecase interface {
 }
 
 type TransactionRepository interface {
-	BeginTx(ctx context.Context) (*sqlx.Tx, error)
 	GetAll(ctx context.Context) ([]TransactionDomain, error)
 	GetByUserId(ctx context.Context, userId string) ([]TransactionDomain, error)
 	Deposit(ctx context.Context, transactionDom TransactionDomain) (TransactionDomain, error)

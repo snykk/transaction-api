@@ -23,15 +23,6 @@ func NewTransactionRepository(conn *sqlx.DB) V1Domains.TransactionRepository {
 	}
 }
 
-func (r *postgreTransactionRepository) BeginTx(ctx context.Context) (*sqlx.Tx, error) {
-	txOptions := &sql.TxOptions{
-		Isolation: sql.LevelSerializable, // Tingkat isolasi tertinggi
-		ReadOnly:  false,                 // Transaksi diperbolehkan melakukan perubahan data
-	}
-
-	return r.conn.BeginTxx(ctx, txOptions)
-}
-
 func (r *postgreTransactionRepository) GetByUserId(ctx context.Context, userId string) ([]V1Domains.TransactionDomain, error) {
 	query := `
 		SELECT 
