@@ -264,7 +264,11 @@ func TestInfo(t *testing.T) {
 	sWallet.GET(constants.EndpointV1+"/wallets/info", walletHandler.Info)
 
 	t.Run("When Success", func(t *testing.T) {
+		ristrettoWalletMock.On("Get", mock.Anything).Return(nil).Once()
+
 		walletRepoMock.Mock.On("GetWalletByUserId", mock.Anything, mock.AnythingOfType("string")).Return(walletDataFromDB, nil).Once()
+
+		ristrettoWalletMock.On("Set", mock.Anything, mock.Anything).Return(nil).Once()
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, constants.EndpointV1+"/wallets/info", nil)
@@ -279,6 +283,8 @@ func TestInfo(t *testing.T) {
 	})
 
 	t.Run("When Wallet Not Found", func(t *testing.T) {
+		ristrettoWalletMock.On("Get", mock.Anything).Return(nil).Once()
+
 		walletRepoMock.Mock.On("GetWalletByUserId", mock.Anything, mock.AnythingOfType("string")).Return(V1Domains.WalletDomain{}, sql.ErrNoRows).Once()
 
 		w := httptest.NewRecorder()
@@ -293,6 +299,8 @@ func TestInfo(t *testing.T) {
 	})
 
 	t.Run("When Database Error Occurs", func(t *testing.T) {
+		ristrettoWalletMock.On("Get", mock.Anything).Return(nil).Once()
+
 		walletRepoMock.Mock.On("GetWalletByUserId", mock.Anything, mock.AnythingOfType("string")).Return(V1Domains.WalletDomain{}, errors.New("database error")).Once()
 
 		w := httptest.NewRecorder()

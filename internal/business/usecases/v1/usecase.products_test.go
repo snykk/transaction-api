@@ -174,18 +174,18 @@ func TestDeleteProduct(t *testing.T) {
 		statusCode, err := productUsecase.DeleteProduct(context.Background(), productDataFromDB.Id)
 
 		assert.Nil(t, err, "Error should be nil")
-		assert.Equal(t, http.StatusOK, statusCode, "Status code should be OK (200)")
+		assert.Equal(t, http.StatusNoContent, statusCode, "Status code should be OK (200)")
 	})
 
 	t.Run("When Failure Delete Product Data", func(t *testing.T) {
 		t.Run("Product doesn't exist", func(t *testing.T) {
-			productRepoMock.Mock.On("GetProductById", mock.Anything, mock.AnythingOfType("int")).Return(V1Domains.ProductDomain{}, errors.New("product not found")).Once()
+			productRepoMock.Mock.On("GetProductById", mock.Anything, mock.AnythingOfType("int")).Return(V1Domains.ProductDomain{}, sql.ErrNoRows).Once()
 
 			statusCode, err := productUsecase.DeleteProduct(context.Background(), 1)
 
 			assert.NotNil(t, err, "Error should not be nil")
 			assert.Equal(t, http.StatusNotFound, statusCode, "Status code should be Not Found (404)")
-			assert.EqualError(t, err, "product not found", "Error message should match")
+			assert.EqualError(t, err, "sql: no rows in result set", "Error message should match")
 		})
 
 		t.Run("Failed Delete Product", func(t *testing.T) {

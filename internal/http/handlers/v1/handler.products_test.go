@@ -249,7 +249,7 @@ func TestGetProductById(t *testing.T) {
 	sProduct.GET(constants.EndpointV1+"/products/:id", ProductHandler.GetById)
 
 	t.Run("When Success and Data Available in Cache", func(t *testing.T) {
-		ristrettoProductMock.On("Get", "product/1").Return(responses.FromProductDomainV1(productDataFromDB)).Once()
+		ristrettoProductMock.On("Get", mock.Anything).Return(responses.FromProductDomainV1(productDataFromDB)).Once()
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, constants.EndpointV1+"/products/1", nil)
@@ -262,7 +262,7 @@ func TestGetProductById(t *testing.T) {
 	})
 
 	t.Run("When Product Not Found", func(t *testing.T) {
-		ristrettoProductMock.On("Get", "product/1").Return(nil).Once()
+		ristrettoProductMock.On("Get", mock.Anything).Return(nil).Once()
 		productRepoMock.Mock.On("GetProductById", mock.Anything, mock.Anything).Return(V1Domains.ProductDomain{}, sql.ErrNoRows).Once()
 
 		w := httptest.NewRecorder()
@@ -293,7 +293,8 @@ func TestUpdateProduct(t *testing.T) {
 
 		productRepoMock.Mock.On("UpdateProduct", mock.Anything, mock.Anything, mock.Anything).Return(nil).Once()
 		productRepoMock.Mock.On("GetProductById", mock.Anything, mock.Anything).Return(productDataFromDB, nil).Once()
-		ristrettoProductMock.On("Del", "products", "product/1").Once()
+
+		ristrettoProductMock.On("Del", "products", "product/product_id:1").Once()
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodPut, constants.EndpointV1+"/products/1", bytes.NewReader(reqBody))
@@ -344,7 +345,7 @@ func TestDeleteProduct(t *testing.T) {
 	t.Run("When Success", func(t *testing.T) {
 		productRepoMock.Mock.On("GetProductById", mock.Anything, mock.Anything).Return(productDataFromDB, nil).Once()
 		productRepoMock.Mock.On("DeleteProduct", mock.Anything, mock.Anything).Return(nil).Once()
-		ristrettoProductMock.On("Del", "products", "product/1").Once()
+		ristrettoProductMock.On("Del", "products", "product/product_id:1").Once()
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodDelete, constants.EndpointV1+"/products/1", nil)

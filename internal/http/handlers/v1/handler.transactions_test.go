@@ -127,21 +127,21 @@ func lazyAuthCommonTransaction(ctx *gin.Context) {
 	ctx.Set(constants.CtxAuthenticatedUserKey, jwtClaims)
 }
 
-func lazyAuthAdminTransaction(ctx *gin.Context) {
-	pass, _ := helpers.GenerateHash("asdfsasaf")
-	jwtClaims := jwt.JwtCustomClaim{
-		UserID:   "asdfsda",
-		IsAdmin:  true,
-		Email:    "asdf@gmail.com",
-		Password: pass,
-		StandardClaims: dgriJWT.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * time.Duration(config.AppConfig.JWTExpired)).Unix(),
-			Issuer:    "asdfafasa",
-			IssuedAt:  time.Now().Unix(),
-		},
-	}
-	ctx.Set(constants.CtxAuthenticatedUserKey, jwtClaims)
-}
+// func lazyAuthAdminTransaction(ctx *gin.Context) {
+// 	pass, _ := helpers.GenerateHash("asdfsasaf")
+// 	jwtClaims := jwt.JwtCustomClaim{
+// 		UserID:   "asdfsda",
+// 		IsAdmin:  true,
+// 		Email:    "asdf@gmail.com",
+// 		Password: pass,
+// 		StandardClaims: dgriJWT.StandardClaims{
+// 			ExpiresAt: time.Now().Add(time.Hour * time.Duration(config.AppConfig.JWTExpired)).Unix(),
+// 			Issuer:    "asdfafasa",
+// 			IssuedAt:  time.Now().Unix(),
+// 		},
+// 	}
+// 	ctx.Set(constants.CtxAuthenticatedUserKey, jwtClaims)
+// }
 
 func TestDeposit(t *testing.T) {
 	setupTransaction(t)
