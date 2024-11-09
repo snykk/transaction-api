@@ -3,7 +3,6 @@ package v1
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"time"
 
@@ -166,7 +165,7 @@ func (r *postgreTransactionRepository) Withdraw(ctx context.Context, transaction
 
 	// Cek apakah saldo mencukupi untuk withdraw dan tidak akan menyebabkan balance menjadi negatif
 	if wallet.Balance < transactionDom.Amount {
-		return V1Domains.TransactionDomain{}, errors.New("insufficient balance for withdraw")
+		return V1Domains.TransactionDomain{}, ErrInsufficientBalance
 	}
 
 	// Hitung saldo baru setelah withdraw
@@ -242,12 +241,12 @@ func (r *postgreTransactionRepository) Purchase(ctx context.Context, trasanction
 	var product records.Product
 	err = tx.GetContext(ctx, &product, queryGetProduct, trasanctionDom.ProductId)
 	if err != nil {
-		return V1Domains.TransactionDomain{}, errors.New("product not found")
+		return V1Domains.TransactionDomain{}, ErrProductNotFound
 	}
 
 	// Validasi apakah stock cukup
 	if product.Stock < *trasanctionDom.Quantity {
-		return V1Domains.TransactionDomain{}, errors.New("insufficient product stock")
+		return V1Domains.TransactionDomain{}, ErrInsufficientProductStock
 	}
 
 	// Hitung total price berdasarkan quantity
@@ -255,7 +254,7 @@ func (r *postgreTransactionRepository) Purchase(ctx context.Context, trasanction
 
 	// Validasi apakah saldo cukup untuk pembelian
 	if wallet.Balance < totalPrice {
-		return V1Domains.TransactionDomain{}, errors.New("insufficient balance")
+		return V1Domains.TransactionDomain{}, ErrInsufficientBalance
 	}
 
 	// Hitung saldo baru setelah pembelian

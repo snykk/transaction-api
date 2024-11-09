@@ -5,30 +5,43 @@ import (
 	"errors"
 	"net/http"
 
+	postgresRepo "github.com/snykk/transaction-api/internal/datasources/repositories/postgres/v1"
+
 	"github.com/jackc/pgconn"
 )
 
-// MapDBError mengembalikan status code dan pesan error yang sesuai
 func MapDBError(err error) (int, error) {
 	// Periksa apakah error berasal dari database PostgreSQL
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) {
 		switch pgErr.Code {
-		case "42P01": // Tabel tidak ditemukan
+		case "42P01":
 			return http.StatusInternalServerError, errors.New("database error: table does not exist")
-		case "42703": // Kolom tidak ditemukan
+		case "42703":
 			return http.StatusInternalServerError, errors.New("database error: column does not exist")
-		case "23505": // Pelanggaran constraint UNIQUE (duplikat nilai pada kolom unik)
+		case "23505":
 			return http.StatusConflict, errors.New("database error: unique constraint violation")
-		case "23503": // Pelanggaran constraint FOREIGN KEY
+		case "23503":
 			return http.StatusBadRequest, errors.New("database error: foreign key violation")
-		case "40P01": // Deadlock detected
+		case "40P01":
 			return http.StatusConflict, errors.New("database error: deadlock detected")
-		case "57014": // Query timeout
+		case "57014":
 			return http.StatusRequestTimeout, errors.New("database error: query timeout")
 		default:
 			return http.StatusInternalServerError, errors.New("unexpected database error")
 		}
+	}
+
+	// Periksa error custom untuk insufficient balance dan insufficient stock
+	if errors.Is(err, postgresRepo.ErrInsufficientBalance) {
+		return http.StatusUnprocessableEntity, postgresRepo.ErrInsufficientBalance
+	}
+	if errors.Is(err, postgresRepo.ErrInsufficientProductStock) {
+		return http.StatusUnprocessableEntity, postgresRepo.ErrInsufficientBalance
+	}
+
+	if errors.Is(err, postgresRepo.ErrProductNotFound) {
+		return http.StatusNotFound, postgresRepo.ErrProductNotFound
 	}
 
 	// Periksa apakah error adalah sql.ErrNoRows

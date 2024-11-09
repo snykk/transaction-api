@@ -19,9 +19,8 @@ type transactionRoutes struct {
 
 func NewTransactionRoute(router *gin.RouterGroup, db *sqlx.DB, ristrettoCache caches.RistrettoCache, authMiddleware gin.HandlerFunc, adminMiddleware gin.HandlerFunc) *transactionRoutes {
 	V1TransactionRepository := V1PostgresRepository.NewTransactionRepository(db)
-	V1WalletRepository := V1PostgresRepository.NewWalletRepository(db)
 
-	V1TransactionUsecase := V1Usecase.NewTransactionUsecase(V1TransactionRepository, V1WalletRepository)
+	V1TransactionUsecase := V1Usecase.NewTransactionUsecase(V1TransactionRepository)
 	V1TransactionHandler := V1Handler.NewTransactionHandler(V1TransactionUsecase, ristrettoCache)
 
 	return &transactionRoutes{v1Handler: V1TransactionHandler, router: router, db: db, authMiddleware: authMiddleware, adminMiddleware: adminMiddleware}
