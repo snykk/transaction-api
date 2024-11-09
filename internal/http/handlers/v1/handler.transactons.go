@@ -26,12 +26,12 @@ func NewTransactionHandler(transactionUsecase V1Domains.TransactionUsecase, rist
 }
 
 func (c *TransactionHandler) GetAll(ctx *gin.Context) {
-	// if val := c.ristrettoCache.Get("transactions"); val != nil {
-	// 	NewSuccessResponse(ctx, http.StatusOK, "transaction data fetched successfully", map[string]interface{}{
-	// 		"transactions": val,
-	// 	})
-	// 	return
-	// }
+	if val := c.ristrettoCache.Get("transactions"); val != nil {
+		NewSuccessResponse(ctx, http.StatusOK, "transaction data fetched successfully", map[string]interface{}{
+			"transactions": val,
+		})
+		return
+	}
 
 	ctxx := ctx.Request.Context()
 	listOfTransactinsDom, statusCode, err := c.transactionUsecase.GetAll(ctxx)
@@ -76,6 +76,8 @@ func (c *TransactionHandler) Deposit(ctx *gin.Context) {
 	}
 
 	go c.ristrettoCache.Del("transactions")
+	go c.ristrettoCache.Del("wallets", fmt.Sprintf("wallet/wallet_id:%s", transactionDom.WalletId), fmt.Sprintf("wallet/user_id:%s", userClaims.UserID))
+	go c.ristrettoCache.Del(fmt.Sprintf("transaction_history/user_id:%s", userClaims.UserID))
 
 	NewSuccessResponse(ctx, statusCode, "deposit completed successfully", map[string]interface{}{
 		"transaction": responses.FromTransactionDomainV1(transactionDom),
@@ -106,8 +108,9 @@ func (c *TransactionHandler) Withdraw(ctx *gin.Context) {
 		return
 	}
 
-	// Hapus cache yang berkaitan dengan transaksi
 	go c.ristrettoCache.Del("transactions")
+	go c.ristrettoCache.Del("wallets", fmt.Sprintf("wallet/wallet_id:%s", transactionDom.WalletId), fmt.Sprintf("wallet/user_id:%s", userClaims.UserID))
+	go c.ristrettoCache.Del(fmt.Sprintf("transaction_history/user_id:%s", userClaims.UserID))
 
 	// Kirim respons sukses
 	NewSuccessResponse(ctx, statusCode, "withdraw completed successfully", map[string]interface{}{
@@ -142,7 +145,9 @@ func (c *TransactionHandler) Purchase(ctx *gin.Context) {
 
 	// 6. Menghapus cache transaksi jika diperlukan (misal menggunakan ristretto)
 	go c.ristrettoCache.Del("transactions")
-	go c.ristrettoCache.Del("transactions", fmt.Sprintf("transaction/%d", *transactionDom.ProductId))
+	go c.ristrettoCache.Del("wallets", fmt.Sprintf("wallet/wallet_id:%s", transactionDom.WalletId), fmt.Sprintf("wallet/user_id:%s", userClaims.UserID))
+	go c.ristrettoCache.Del("products", fmt.Sprintf("product/product_id:%d", *transactionDom.ProductId))
+	go c.ristrettoCache.Del(fmt.Sprintf("transaction_history/user_id:%s", userClaims.UserID))
 
 	// 7. Mengembalikan response sukses
 	NewSuccessResponse(ctx, statusCode, "purchase successful", map[string]interface{}{
@@ -154,6 +159,13 @@ func (c *TransactionHandler) History(ctx *gin.Context) {
 	// get authenticated user from context
 	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
 
+	if val := c.ristrettoCache.Get(fmt.Sprintf("transaction_history/user_id:%s", userClaims.UserID)); val != nil {
+		NewSuccessResponse(ctx, http.StatusOK, "transaction data fetched successfully", map[string]interface{}{
+			"transactions": val,
+		})
+		return
+	}
+
 	ctxx := ctx.Request.Context()
 	transactionDom, statusCode, err := c.transactionUsecase.History(ctxx, userClaims.UserID)
 	if err != nil {
@@ -161,9 +173,15 @@ func (c *TransactionHandler) History(ctx *gin.Context) {
 		return
 	}
 
-	go c.ristrettoCache.Del("transactions")
+	transactionHistoryResponse := responses.ToTransactionResponseList(transactionDom)
+	if transactionHistoryResponse == nil {
+		NewSuccessResponse(ctx, statusCode, "transaction history is empty", []int{})
+		return
+	}
+
+	go c.ristrettoCache.Set(fmt.Sprintf("transaction_history/user_id:%s", userClaims.UserID), transactionHistoryResponse)
 
 	NewSuccessResponse(ctx, statusCode, "transaction history fetched successfully", map[string]interface{}{
-		"transactions": responses.ToTransactionResponseList(transactionDom),
+		"transactions": transactionHistoryResponse,
 	})
 }

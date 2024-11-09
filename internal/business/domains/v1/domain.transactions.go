@@ -34,4 +34,7 @@ type TransactionRepository interface {
 	BeginTx(ctx context.Context) (*sqlx.Tx, error)
 	GetAll(ctx context.Context) ([]TransactionDomain, error)
 	GetByUserId(ctx context.Context, userId string) ([]TransactionDomain, error)
+	Deposit(ctx context.Context, transactionDom TransactionDomain) (TransactionDomain, error)
+	Withdraw(ctx context.Context, transactionDom TransactionDomain) (TransactionDomain, error)
+	Purchase(ctx context.Context, trasanctionDom TransactionDomain) (TransactionDomain, error)
 }

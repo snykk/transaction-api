@@ -77,7 +77,7 @@ func (c *ProductHandler) GetAll(ctx *gin.Context) {
 
 func (c *ProductHandler) GetById(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
-	if val := c.ristrettoCache.Get(fmt.Sprintf("product/%d", id)); val != nil {
+	if val := c.ristrettoCache.Get(fmt.Sprintf("product/product_id:%d", id)); val != nil {
 		NewSuccessResponse(ctx, http.StatusOK, fmt.Sprintf("product data with id %d fetched successfully", id), map[string]interface{}{
 			"product": val,
 		})
@@ -94,7 +94,7 @@ func (c *ProductHandler) GetById(ctx *gin.Context) {
 
 	productResponse := responses.FromProductDomainV1(productDomain)
 
-	go c.ristrettoCache.Set(fmt.Sprintf("product/%d", id), productResponse)
+	go c.ristrettoCache.Set(fmt.Sprintf("product/product_id:%d", id), productResponse)
 
 	NewSuccessResponse(ctx, statusCode, fmt.Sprintf("product data with id %d fetched successfully", id), map[string]interface{}{
 		"product": productResponse,
@@ -118,7 +118,7 @@ func (c *ProductHandler) Update(ctx *gin.Context) {
 		return
 	}
 
-	go c.ristrettoCache.Del("products", fmt.Sprintf("product/%d", id))
+	go c.ristrettoCache.Del("products", fmt.Sprintf("product/product_id:%d", id))
 
 	NewSuccessResponse(ctx, statusCode, fmt.Sprintf("product data with id %d updated successfully", id), map[string]interface{}{
 		"product": responses.FromProductDomainV1(newProduct),
@@ -135,7 +135,7 @@ func (c *ProductHandler) Delete(ctx *gin.Context) {
 		return
 	}
 
-	go c.ristrettoCache.Del("products", fmt.Sprintf("product/%d", id))
+	go c.ristrettoCache.Del("products", fmt.Sprintf("product/product_id:%d", id))
 
 	NewSuccessResponse(ctx, statusCode, fmt.Sprintf("product data with id %d deleted successfully", id), nil)
 }

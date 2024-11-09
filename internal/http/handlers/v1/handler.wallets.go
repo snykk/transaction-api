@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -74,6 +75,13 @@ func (c *WalletHandler) Info(ctx *gin.Context) {
 	// get authenticated user from context
 	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
 
+	if val := c.ristrettoCache.Get(fmt.Sprintf("wallet/user_id:%s", userClaims.UserID)); val != nil {
+		NewSuccessResponse(ctx, http.StatusOK, "wallet fetched successfully ", map[string]interface{}{
+			"wallets": val,
+		})
+		return
+	}
+
 	ctxx := ctx.Request.Context()
 	walletDom, statusCode, err := c.walletUsecase.GetWalletByUserId(ctxx, userClaims.UserID)
 	if err != nil {
@@ -81,10 +89,10 @@ func (c *WalletHandler) Info(ctx *gin.Context) {
 		return
 	}
 
-	// remove user relation
-	walletDom.User = V1Domains.UserDomain{}
+	walletResponse := responses.FromWalletDomainV1(walletDom)
+	go c.ristrettoCache.Set(fmt.Sprintf("wallet/user_id:%s", userClaims.UserID), walletResponse)
 
 	NewSuccessResponse(ctx, statusCode, "wallet fetched successfully", map[string]interface{}{
-		"wallet": responses.FromWalletDomainV1(walletDom),
+		"wallet": walletResponse,
 	})
 }

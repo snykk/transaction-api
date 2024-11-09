@@ -1,7 +1,6 @@
 package jwt_test
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -25,7 +24,6 @@ func TestParseToken(t *testing.T) {
 		token, _ := jwtService.GenerateToken("asf-asf-asfdasd-asdfsa", false, "john.doe@example.com", "password")
 
 		claims, err := jwtService.ParseToken(token)
-		fmt.Println("ini expire token", claims.StandardClaims.ExpiresAt)
 		assert.NoError(t, err)
 		assert.Equal(t, "asf-asf-asfdasd-asdfsa", claims.UserID)
 		assert.Equal(t, false, claims.IsAdmin)
